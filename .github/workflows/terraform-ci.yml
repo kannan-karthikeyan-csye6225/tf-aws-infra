@@ -18,13 +18,13 @@ jobs:
         with:
           terraform_version: 1.9.7  # Specify your Terraform version here
 
+      - name: Terraform init
+        run: terraform init
+
       - name: Terraform fmt
         run: terraform fmt -check
 
       - name: Terraform validate
         run: terraform validate
-
-      - name: Terraform plan
-        run: terraform plan
 
       # Add any other necessary steps here
