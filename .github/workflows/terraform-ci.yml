@@ -18,6 +18,9 @@ jobs:
         with:
           terraform_version: 1.9.7  # Specify your Terraform version here
 
+      - name: Terraform init
+        run: terraform init
+
       - name: Terraform fmt
         run: terraform fmt -check
 
