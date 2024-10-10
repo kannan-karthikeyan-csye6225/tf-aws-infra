@@ -3,7 +3,7 @@ name: Terraform CI
 on:
   pull_request:
     branches:
-      - main  # Trigger on pull requests to the main branch of the upstream repository
+      - main
 
 jobs:
   terraform:
@@ -16,7 +16,7 @@ jobs:
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: 1.9.7  # Specify your Terraform version here
+          terraform_version: 1.9.7 
 
       - name: Terraform init
         run: terraform init
@@ -26,5 +26,3 @@ jobs:
 
       - name: Terraform validate
         run: terraform validate
-
-      # Add any other necessary steps here
