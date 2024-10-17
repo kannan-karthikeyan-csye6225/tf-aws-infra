@@ -74,3 +74,65 @@ resource "aws_route_table_association" "private_rt_association" {
   subnet_id      = aws_subnet.private_subnets[count.index].id
   route_table_id = aws_route_table.private_rt.id
 }
+resource "aws_security_group" "app_sg" {
+  vpc_id = aws_vpc.main_vpc.id
+  name   = "app-security-group"
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = var.app_port
+    to_port     = var.app_port
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "app-security-group"
+  }
+}
+resource "aws_instance" "web_app" {
+  ami                         = var.custom_ami
+  instance_type               = "t2.small"
+  subnet_id                   = aws_subnet.public_subnets[0].id
+  vpc_security_group_ids      = [aws_security_group.app_sg.id]
+  associate_public_ip_address = true
+
+  root_block_device {
+    volume_size           = 25
+    volume_type           = "gp2"
+    delete_on_termination = true
+  }
+
+  depends_on = [aws_security_group.app_sg]
+
+  tags = {
+    Name = "web-app-instance"
+  }
+}
