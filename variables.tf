@@ -36,4 +36,9 @@ variable "custom_ami" {
   description = "AMI for the EC2 instance"
   type        = string
 }
+variable "db_password" {
+  description = "Password for RDS instance"
+  type        = string
+  sensitive   = true
+}
 
