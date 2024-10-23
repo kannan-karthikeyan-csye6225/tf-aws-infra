@@ -201,7 +201,7 @@ resource "aws_instance" "web_app" {
 
   root_block_device {
     volume_size           = 25
-    volume_type          = "gp2"
+    volume_type           = "gp2"
     delete_on_termination = true
   }
 
