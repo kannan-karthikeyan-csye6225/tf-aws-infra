@@ -117,6 +117,69 @@ resource "aws_security_group" "app_sg" {
     Name = "app-security-group"
   }
 }
+# DB Security Group
+resource "aws_security_group" "db_sg" {
+  name        = "database-security-group"
+  description = "Security group for RDS instance"
+  vpc_id      = aws_vpc.main_vpc.id
+
+  ingress {
+    from_port       = 5432
+    to_port         = 5432
+    protocol        = "tcp"
+    security_groups = [aws_security_group.app_sg.id]
+  }
+
+  tags = {
+    Name = "database-sg"
+  }
+}
+
+# DB Subnet Group
+resource "aws_db_subnet_group" "db_subnet_group" {
+  name        = "csye6225-db-subnet-group"
+  description = "DB subnet group for RDS"
+  subnet_ids  = aws_subnet.private_subnets[*].id
+
+  tags = {
+    Name = "csye6225-db-subnet-group"
+  }
+}
+
+# DB Parameter Group
+resource "aws_db_parameter_group" "db_parameter_group" {
+  family = "postgres14"
+  name   = "csye6225-db-parameter-group"
+
+  parameter {
+    name  = "log_connections"
+    value = "1"
+  }
+}
+
+# RDS Instance
+resource "aws_db_instance" "db_instance" {
+  identifier        = "csye6225"
+  engine            = "postgres"
+  engine_version    = "14"
+  instance_class    = "db.t3.micro"
+  allocated_storage = 20
+
+  db_name  = "csye6225"
+  username = "csye6225"
+  password = var.db_password
+
+  db_subnet_group_name   = aws_db_subnet_group.db_subnet_group.name
+  parameter_group_name   = aws_db_parameter_group.db_parameter_group.name
+  vpc_security_group_ids = [aws_security_group.db_sg.id]
+
+  skip_final_snapshot = true
+  publicly_accessible = false
+
+  tags = {
+    Name = "csye6225-rds"
+  }
+}
 resource "aws_instance" "web_app" {
   ami                         = var.custom_ami
   instance_type               = "t2.small"
@@ -124,13 +187,25 @@ resource "aws_instance" "web_app" {
   vpc_security_group_ids      = [aws_security_group.app_sg.id]
   associate_public_ip_address = true
 
+  user_data = base64encode(<<-EOF
+              #!/bin/bash
+              echo "DB_NAME=csye6225" >> /opt/apps/webapp/.env
+              echo "DB_USER=csye6225" >> /opt/apps/webapp/.env
+              echo "DB_PASSWORD=${var.db_password}" >> /opt/apps/webapp/.env
+              echo "DB_HOST=${aws_db_instance.db_instance.endpoint}" >> /opt/apps/webapp/.env
+              echo "DB_PORT=5432" >> /opt/apps/webapp/.env
+              
+              sudo systemctl restart myapp
+              EOF
+  )
+
   root_block_device {
     volume_size           = 25
-    volume_type           = "gp2"
+    volume_type          = "gp2"
     delete_on_termination = true
   }
 
-  depends_on = [aws_security_group.app_sg]
+  depends_on = [aws_security_group.app_sg, aws_db_instance.db_instance]
 
   tags = {
     Name = "web-app-instance"
