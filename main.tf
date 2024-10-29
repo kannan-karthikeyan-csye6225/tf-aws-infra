@@ -211,3 +211,49 @@ resource "aws_instance" "web_app" {
     Name = "web-app-instance"
   }
 }
+
+# Generate a unique UUID for the S3 bucket name
+resource "random_uuid" "bucket_name" {}
+
+# Create the S3 bucket
+resource "aws_s3_bucket" "example_bucket" {
+  bucket = random_uuid.bucket_name.result
+  force_destroy = true  # Allows deletion even if the bucket contains objects
+
+  tags = {
+    Name = "example-bucket"
+  }
+}
+
+# Set the ACL for the bucket (private)
+resource "aws_s3_bucket_acl" "example_bucket_acl" {
+  bucket = aws_s3_bucket.example_bucket.id
+  acl    = "private"
+}
+
+# Configure server-side encryption (SSE-S3 with AES256) for the bucket
+resource "aws_s3_bucket_server_side_encryption_configuration" "example_bucket_encryption" {
+  bucket = aws_s3_bucket.example_bucket.id
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
+    }
+  }
+}
+
+# Define a lifecycle configuration to transition objects to STANDARD_IA after 30 days
+resource "aws_s3_bucket_lifecycle_configuration" "example_bucket_lifecycle" {
+  bucket = aws_s3_bucket.example_bucket.id
+
+  rule {
+    id     = "TransitionToStandardIA"
+    status = "Enabled"
+
+    transition {
+      days          = 30
+      storage_class = "STANDARD_IA"
+    }
+  }
+}
+
