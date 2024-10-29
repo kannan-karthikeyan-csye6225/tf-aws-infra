@@ -27,6 +27,7 @@ variable "availability_zones" {
   description = "List of availability zones to distribute subnets"
   type        = list(string)
 }
+
 variable "app_port" {
   description = "Port on which the application runs"
   type        = number
@@ -36,9 +37,14 @@ variable "custom_ami" {
   description = "AMI for the EC2 instance"
   type        = string
 }
+
 variable "db_password" {
   description = "Password for RDS instance"
   type        = string
   sensitive   = true
 }
 
+variable "subdomain_name" {
+  description = "The subdomain for DNS record"
+  type        = string
+}
