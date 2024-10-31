@@ -5,7 +5,7 @@ resource "aws_instance" "web_app" {
   vpc_security_group_ids      = [var.app_security_group_id]
   associate_public_ip_address = true
 
-  iam_instance_profile = "CloudWatchAgent"
+  iam_instance_profile = "CloudWatch-S3"
 
   user_data = base64encode(<<-EOF
               #!/bin/bash
@@ -14,6 +14,8 @@ resource "aws_instance" "web_app" {
               echo "DB_PASSWORD=${var.db_password}" >> /opt/apps/webapp/.env
               echo "DB_HOST=${var.db_endpoint}" >> /opt/apps/webapp/.env
               echo "DB_PORT=5432" >> /opt/apps/webapp/.env
+              echo "AWS_REGION=${var.aws_region}" >> /opt/apps/webapp/.env
+              echo "S3_BUCKET_NAME=${var.bucket_name}" >> /opt/apps/webapp/.env
 
               /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
                 -a fetch-config \

@@ -31,6 +31,8 @@ module "ec2" {
   app_security_group_id = module.sg.app_security_group_id
   db_password         = var.db_password
   db_endpoint         = module.rds.db_endpoint
+  aws_region          = var.aws_region 
+  bucket_name         = module.s3.bucket_name
 }
 
 module "s3" {
