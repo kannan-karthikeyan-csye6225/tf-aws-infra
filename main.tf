@@ -33,6 +33,7 @@ module "ec2" {
   db_endpoint         = module.rds.db_endpoint
   aws_region          = var.aws_region 
   bucket_name         = module.s3.bucket_name
+  bucket_arn          = module.s3.bucket_arn
 }
 
 module "s3" {
