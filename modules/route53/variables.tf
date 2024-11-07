@@ -1,9 +1,15 @@
+# modules/route53/variables.tf
 variable "subdomain_name" {
   description = "The subdomain for which to create the DNS A record"
   type        = string
 }
 
-variable "instance_public_ip" {
-  description = "The public IP of the EC2 instance"
+variable "lb_dns_name" {
+  description = "The DNS name of the load balancer"
+  type        = string
+}
+
+variable "lb_zone_id" {
+  description = "The zone ID of the load balancer"
   type        = string
 }

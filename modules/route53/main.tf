@@ -3,10 +3,14 @@ data "aws_route53_zone" "selected" {
   private_zone = false
 }
 
-resource "aws_route53_record" "dev_a_record" {
+resource "aws_route53_record" "app_dns_record" {
   zone_id = data.aws_route53_zone.selected.zone_id
-  name    = data.aws_route53_zone.selected.name
+  name    = "${var.subdomain_name}.leodas.me"  # Use the full subdomain name
   type    = "A"
-  ttl     = "300"
-  records = [var.instance_public_ip]
+
+  alias {
+    name                   = var.lb_dns_name  # Points to ALB's DNS name
+    zone_id                = var.lb_zone_id  # ALB's zone ID
+    evaluate_target_health = true
+  }
 }
