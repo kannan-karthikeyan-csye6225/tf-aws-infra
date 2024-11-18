@@ -1,3 +1,4 @@
+# modules/ec2/variables.tf
 variable "custom_ami" {
   description = "AMI for the EC2 instance"
   type        = string

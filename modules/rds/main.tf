@@ -1,3 +1,5 @@
+# modules/rds/main.tf
+
 resource "aws_db_subnet_group" "db_subnet_group" {
   name        = "csye6225-db-subnet-group"
   description = "DB subnet group for RDS"

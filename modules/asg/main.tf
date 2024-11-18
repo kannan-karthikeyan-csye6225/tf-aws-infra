@@ -1,3 +1,5 @@
+# modules/asg/main.tf
+
 resource "aws_launch_template" "app_launch_template" {
   name                   = "csye6225-app-launch-template"
   instance_type         = "t2.small"
@@ -53,7 +55,7 @@ resource "aws_cloudwatch_metric_alarm" "high_cpu_alarm" {
   namespace           = "AWS/EC2"
   period              = 300
   statistic           = "Average"
-  threshold           = 5.0
+  threshold           = 15.0
   alarm_description   = "Alarm for scaling up when CPU utilization is above 5%"
   dimensions = {
     AutoScalingGroupName = aws_autoscaling_group.app_autoscaling_group.name
@@ -71,7 +73,7 @@ resource "aws_cloudwatch_metric_alarm" "low_cpu_alarm" {
   namespace           = "AWS/EC2"
   period              = 300
   statistic           = "Average"
-  threshold           = 3.0
+  threshold           = 10.0
   alarm_description   = "Alarm for scaling down when CPU utilization is below 3%"
   dimensions = {
     AutoScalingGroupName = aws_autoscaling_group.app_autoscaling_group.name
