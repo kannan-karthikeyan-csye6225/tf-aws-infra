@@ -1,3 +1,4 @@
+# modules/asg/variables.tf
 variable "custom_ami" {
   description = "AMI for the EC2 instance"
   type        = string
@@ -33,5 +34,10 @@ variable "bucket_name" {
 }
 variable "bucket_arn" {
   description = "The ARN of the example S3 bucket"
+  type        = string
+}
+
+variable "sns_topic_arn" {
+  description = "ARN of the SNS topic"
   type        = string
 }

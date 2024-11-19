@@ -1,8 +1,10 @@
+# modules/sg/main.tf
+
 resource "aws_security_group" "app_sg" {
   vpc_id = var.vpc_id
   name   = "app-security-group"
 
-  # Allow traffic from ALB
+
   ingress {
     from_port       = var.app_port
     to_port         = var.app_port
@@ -10,13 +12,12 @@ resource "aws_security_group" "app_sg" {
     security_groups = [aws_security_group.lb_sg.id]
   }
 
-  # Allow SSH access
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+  # ingress {
+  #   from_port   = 22
+  #   to_port     = 22
+  #   protocol    = "tcp"
+  #   cidr_blocks = ["0.0.0.0/0"]
+  # }
 
   egress {
     from_port   = 0

@@ -1,3 +1,4 @@
+# modules/s3/main.tf
 resource "random_uuid" "bucket_name" {}
 
 resource "aws_s3_bucket" "example_bucket" {

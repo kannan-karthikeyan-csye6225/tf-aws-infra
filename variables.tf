@@ -1,3 +1,4 @@
+# variables.tf
 variable "aws_region" {
   description = "The AWS region to deploy to"
   type        = string
@@ -52,4 +53,19 @@ variable "subdomain_name" {
 variable "key_name" {
   description = "The name of the key pair to use for the EC2 instances"
   type        = string
+}
+
+variable "sendgrid_api_key" {
+  description = "SendGrid API key"
+  type        = string
+  sensitive   = true
+}
+variable "lambda_zip_path" {
+  description = "Path to the Lambda function ZIP file"
+  type        = string
+}
+variable "domain_name" {
+  description = "Base domain name"
+  type        = string
+  default     = "leodas.me"
 }

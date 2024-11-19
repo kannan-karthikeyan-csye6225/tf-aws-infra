@@ -1,3 +1,5 @@
+# modules/ec2/main.tf
+
 resource "aws_instance" "web_app" {
   ami                         = var.custom_ami
   instance_type               = "t2.small"
