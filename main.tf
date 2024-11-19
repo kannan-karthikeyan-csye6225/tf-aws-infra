@@ -61,6 +61,7 @@ module "asg" {
   source                = "./modules/asg"
   custom_ami            = var.custom_ami
   key_name              = var.key_name
+  aws_profile           = var.aws_profile
   bucket_name           = module.s3.bucket_name
   bucket_arn            = module.s3.bucket_arn
   app_security_group_id = module.sg.app_security_group_id

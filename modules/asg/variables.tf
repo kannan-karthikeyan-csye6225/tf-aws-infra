@@ -41,3 +41,8 @@ variable "sns_topic_arn" {
   description = "ARN of the SNS topic"
   type        = string
 }
+
+variable "aws_profile" {
+  description = "AWS CLI profile to use"
+  type        = string
+}

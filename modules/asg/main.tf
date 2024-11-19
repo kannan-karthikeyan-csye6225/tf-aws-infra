@@ -17,6 +17,10 @@ resource "aws_launch_template" "app_launch_template" {
     enabled = true
   }
 
+  tags = {
+    Environment = var.aws_profile
+  }
+
   tag_specifications {
     resource_type = "instance"
     tags = {
@@ -42,7 +46,7 @@ resource "aws_autoscaling_group" "app_autoscaling_group" {
 
   tag {
     key                 = "Name"
-    value               = "webapp-asg-instance"
+    value               = "${var.aws_profile}-webapp-asg-instance"
     propagate_at_launch = true
   }
 }
