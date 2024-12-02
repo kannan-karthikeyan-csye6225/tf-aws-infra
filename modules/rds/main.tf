@@ -31,6 +31,9 @@ resource "aws_db_instance" "db_instance" {
   username = "csye6225"
   password = var.db_password
 
+  storage_encrypted = true
+  kms_key_id        = var.rds_kms_key_id
+
   db_subnet_group_name   = aws_db_subnet_group.db_subnet_group.name
   parameter_group_name   = aws_db_parameter_group.db_parameter_group.name
   vpc_security_group_ids = [var.db_security_group_id]

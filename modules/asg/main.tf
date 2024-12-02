@@ -159,6 +159,31 @@ resource "aws_iam_role_policy" "ec2_policy" {
           var.bucket_arn,
           "${var.bucket_arn}/*"
         ]
+      },
+      {
+        Effect = "Allow",
+        Action = [
+          "kms:Decrypt",
+          "kms:GenerateDataKey"
+        ],
+        Resource = var.s3_kms_key_arn
+      },
+      {
+        Effect = "Allow",
+        Action = [
+          "kms:Decrypt"
+        ],
+        Resource = var.kms_key_arns 
+      },
+      {
+        Effect = "Allow",
+        Action = [
+          "secretsmanager:GetSecretValue"
+        ],
+        Resource = [
+          var.db_password_arn,
+          var.email_credentials_arn,
+        ]
       }
     ]
   })
