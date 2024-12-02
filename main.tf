@@ -59,6 +59,7 @@ module "alb" {
   public_subnet_ids    = module.vpc.public_subnet_ids
   vpc_id              = module.vpc.vpc_id
   app_port            = var.app_port
+  ssl_certificate_arn = var.ssl_certificate_arn
 }
 
 module "kms" {
@@ -91,8 +92,8 @@ module "asg" {
                               export AWS_REGION=u${var.aws_region}
                               export AWS_DEFAULT_REGION=${var.aws_region}
 
-                              DB_PASSWORD=$(aws secretsmanager get-secret-value --secret-id kannan --region ${var.aws_region} --query SecretString --output text)
-                              SENDGRID_API_KEY=$(aws secretsmanager get-secret-value --secret-id kanz --region ${var.aws_region} --query SecretString --output text)
+                              DB_PASSWORD=$(aws secretsmanager get-secret-value --secret-id ${module.secrets.db_password_secret_name} --region ${var.aws_region} --query SecretString --output text)
+                              SENDGRID_API_KEY=$(aws secretsmanager get-secret-value --secret-id ${module.secrets.email_credentials_secret_name} --region ${var.aws_region} --query SecretString --output text)
 
                               echo "DB_NAME=csye6225" >> /opt/apps/webapp/.env
                               echo "DB_USER=csye6225" >> /opt/apps/webapp/.env
@@ -103,7 +104,7 @@ module "asg" {
                               echo "AWS_REGION=${var.aws_region}" >> /opt/apps/webapp/.env
                               echo "S3_BUCKET_NAME=${module.s3.bucket_name}" >> /opt/apps/webapp/.env
                               echo "SNS_TOPIC_ARN=${module.sns.topic_arn}" >> /opt/apps/webapp/.env
-                              echo "API_BASE_URL=http://${var.subdomain_name}.${var.domain_name}" >> /opt/apps/webapp/.env
+                              echo "API_BASE_URL=https://${var.subdomain_name}.${var.domain_name}" >> /opt/apps/webapp/.env
 
                               /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
                                 -a fetch-config \

@@ -1,5 +1,5 @@
 resource "aws_secretsmanager_secret" "db_password" {
-  name        = "kannan"
+  name        = format("db-password-%s", formatdate("YYYYMMDDHHmmss", timestamp()))
   kms_key_id  = var.kms_secrets_key_id
 
   tags = {
@@ -14,7 +14,7 @@ resource "aws_secretsmanager_secret_version" "db_password" {
 }
 
 resource "aws_secretsmanager_secret" "email_credentials" {
-  name                    = "kanz"
+  name                    = format("sendgrid-api-key-%s", formatdate("YYYYMMDDHHmmss", timestamp()))
   kms_key_id              = var.kms_secrets_key_id
   recovery_window_in_days = 7
 

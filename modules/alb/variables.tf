@@ -18,3 +18,8 @@ variable "app_port" {
   description = "Port on which the application runs"
   type        = number
 }
+
+variable "ssl_certificate_arn" {
+  description = "ARN of the SSL certificate for the load balancer"
+  type        = string
+}
