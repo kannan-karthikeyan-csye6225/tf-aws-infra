@@ -46,3 +46,22 @@ variable "aws_profile" {
   description = "AWS CLI profile to use"
   type        = string
 }
+variable "db_password_arn" {
+  description = "ARN of the database password secret"
+  type        = string
+}
+
+variable "email_credentials_arn" {
+  description = "ARN of the email credentials secret"
+  type        = string
+}
+
+variable "kms_key_arns" {
+  description = "List of KMS key ARNs that the EC2 instances can decrypt"
+  type        = list(string)
+}
+
+variable "s3_kms_key_arn" {
+  description = "The ARN of the KMS key for S3 encryption"
+  type        = string
+}
