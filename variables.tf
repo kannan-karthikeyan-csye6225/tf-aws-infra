@@ -69,3 +69,7 @@ variable "domain_name" {
   type        = string
   default     = "leodas.me"
 }
+variable "ssl_certificate_arn" {
+  description = "ARN of the SSL certificate for the load balancer"
+  type        = string
+}
